@@ -2,8 +2,8 @@ name: Scheduled Bot Run
 
 on:
   schedule:
-    # Запуск в 12:00, 14:00, 16:00 МСК = 09:00, 11:00, 13:00 UTC
-    - cron: '0 9,11,13 * * *'
+    # Запуск в 12:00, 14:00, 16:00, 18:00, 20:00, 22:00 МСК = 09:00, 11:00, 13:00, 15:00, 17:00, 19:00 UTC
+    - cron: '0 9,11,13,15,17,19 * * *'
   workflow_dispatch:  # Можно запустить вручную для теста
 
 jobs:
@@ -42,8 +42,3 @@ jobs:
           echo "📍 Moscow time: $(TZ=Europe/Moscow date)"
           timeout 300 python main.py || true
           echo "✅ Bot run completed"
-```
-
-5. **Commit changes**:
-```
-   Add scheduled workflow for automatic bot runs (12:00, 14:00, 16:00 MSK)
