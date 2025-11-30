@@ -1,0 +1,23 @@
+# Telegram Bot
+python-telegram-bot==20.7
+
+# Twitter API
+tweepy==4.14.0
+
+# OpenAI API
+openai==1.54.3
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Image processing
+Pillow==10.1.0
+
+# HTTP requests
+requests==2.31.0
+
+# Async support
+aiohttp==3.9.1
+
+# Logging
+colorlog==6.8.0
