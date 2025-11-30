@@ -15,7 +15,7 @@ from utils.logger import setup_logger
 from utils import ImageHandler
 from bot.ai_processor import AIProcessor
 from bot.telegram_publisher import TelegramPublisher
-from bot.twitter_publisher import TwitterPublisher
+# from bot.twitter_publisher import TwitterPublisher  # Временно отключено
 
 logger = setup_logger(__name__)
 
@@ -28,7 +28,7 @@ class TelegramHandler:
         self.image_handler = ImageHandler()
         self.ai_processor = AIProcessor()
         self.telegram_publisher = TelegramPublisher()
-        self.twitter_publisher = TwitterPublisher()
+        # self.twitter_publisher = TwitterPublisher()  # Временно отключено
         
         # Build application
         self.application = Application.builder().token(config.TELEGRAM_BOT_TOKEN).build()
@@ -48,12 +48,13 @@ class TelegramHandler:
         """Handle /start command."""
         await update.message.reply_text(
             "🤖 <b>Social Content Bridge Bot</b>\n\n"
-            "I will help you republish content to your Telegram channel and Twitter!\n\n"
+            "I will help you republish content to your Telegram channel!\n\n"
             "📝 <b>How to use:</b>\n"
             "1. Forward any message to me (text and/or image)\n"
             "2. I will process it with AI\n"
-            "3. I will automatically publish to your channel and Twitter\n\n"
-            "🔧 Use /help for more information",
+            "3. I will automatically publish to your channel\n\n"
+            "🔧 Use /help for more information\n\n"
+            "⚠️ <b>Note:</b> Twitter publishing is temporarily disabled",
             parse_mode='HTML'
         )
     
@@ -64,7 +65,7 @@ class TelegramHandler:
             "<b>Features:</b>\n"
             "✅ Translate Russian to English\n"
             "✅ Improve text style\n"
-            "✅ Generate short version for Twitter (≤280 chars)\n"
+            "✅ Generate short version\n"
             "✅ Add relevant hashtags\n"
             "✅ Support images (first image only)\n"
             "✅ Generate captions for image-only posts\n\n"
@@ -76,7 +77,8 @@ class TelegramHandler:
             "• Videos\n"
             "• Multiple images (only first is used)\n"
             "• Audio files\n\n"
-            "🔐 Only authorized user can use this bot",
+            "🔐 Only authorized user can use this bot\n\n"
+            "⚠️ <b>Note:</b> Twitter publishing is temporarily disabled",
             parse_mode='HTML'
         )
     
@@ -126,9 +128,10 @@ class TelegramHandler:
             await status_msg.edit_text("📤 Publishing to Telegram...")
             telegram_success = await self.telegram_publisher.publish(full_text, image_path)
             
-            # Publish to Twitter
-            await status_msg.edit_text("🐦 Publishing to Twitter...")
-            twitter_success = await self.twitter_publisher.publish(short_text, image_path)
+            # Twitter publishing temporarily disabled
+            # await status_msg.edit_text("🐦 Publishing to Twitter...")
+            # twitter_success = await self.twitter_publisher.publish(short_text, image_path)
+            twitter_success = False  # Temporarily disabled
             
             # Cleanup temporary files
             if image_path:
@@ -141,10 +144,8 @@ class TelegramHandler:
             else:
                 status_parts.append("❌ Telegram")
             
-            if twitter_success:
-                status_parts.append("✅ Twitter")
-            else:
-                status_parts.append("❌ Twitter")
+            # Twitter status
+            status_parts.append("⏸️ Twitter (disabled)")
             
             final_status = " | ".join(status_parts)
             
@@ -168,4 +169,5 @@ class TelegramHandler:
         logger.info("🚀 Starting bot...")
         logger.info(f"📢 Channel: {config.TELEGRAM_CHANNEL_ID}")
         logger.info(f"👤 Authorized user: {config.AUTHORIZED_USER_ID}")
+        logger.info("⚠️ Twitter publishing is temporarily disabled")
         self.application.run_polling(allowed_updates=Update.ALL_TYPES)
