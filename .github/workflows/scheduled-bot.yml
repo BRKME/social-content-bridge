@@ -2,9 +2,9 @@ name: Scheduled Bot Run
 
 on:
   schedule:
-    # Каждые 2 часа по чётным: 12:00, 14:00, 16:00, 18:00, 20:00, 22:00 UTC
-    - cron: '0 12,14,16,18,20,22 * * *'
-  workflow_dispatch:  # Можно запустить вручную
+    # Запуск в 12:00, 14:00, 16:00 МСК = 09:00, 11:00, 13:00 UTC
+    - cron: '0 9,11,13 * * *'
+  workflow_dispatch:  # Можно запустить вручную для теста
 
 jobs:
   run-bot:
@@ -38,6 +38,12 @@ jobs:
           OPENAI_MODEL: gpt-4o-mini
           LOG_LEVEL: INFO
         run: |
-          echo "🤖 Starting scheduled bot run at $(date)"
+          echo "🤖 Starting scheduled bot run at $(date) UTC"
+          echo "📍 Moscow time: $(TZ=Europe/Moscow date)"
           timeout 300 python main.py || true
-          echo "✅ Bot run completed at $(date)"
+          echo "✅ Bot run completed"
+```
+
+5. **Commit changes**:
+```
+   Add scheduled workflow for automatic bot runs (12:00, 14:00, 16:00 MSK)
